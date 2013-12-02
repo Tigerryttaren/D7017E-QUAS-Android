@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,13 +91,14 @@ public class MyListActivity extends ListActivity {
 
   @Override
   protected void onListItemClick(ListView l, View v, int position, long id) {
-    String item = (String) getListAdapter().getItem(position);
-    Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
+    //String item = (String) getListAdapter().getItem(position);
+    Toast.makeText(this, position + " selected", Toast.LENGTH_LONG).show();
   }
   
 //PRIVATE INNER JSON PARSER CLASS
-	private class AsyncHTTPGETToJSONTask extends AsyncTask<String, Void, JSONObject> {
+	private class AsyncHTTPGETToJSONTask extends AsyncTask<String, Integer, JSONObject> {
 		protected Context context;
+		private ProgressDialog dialog = new ProgressDialog(MyListActivity.this);
 		
 		protected AsyncHTTPGETToJSONTask (Context c) {
 			this.context = c;
@@ -135,27 +136,24 @@ public class MyListActivity extends ListActivity {
 	    	return jObj;
 	    }
 	    
-	    
-	   
-	    //LinearLayout linlaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);    
-	    
-	    
 	    @Override
 	    protected void onPreExecute() {
-	    	//linlaHeaderProgress.setVisibility(View.VISIBLE);
-	    	//bar.setVisibility(View.VISIBLE);
+	    	this.dialog.setMessage("Fetching questions...");
+	        this.dialog.show();
 	    }
 
 	    @Override
 	    protected void onPostExecute(JSONObject json) {
-	    	//bar.setVisibility(View.GONE);
-	    	try {
-	    		
+	    	// Dismisses the loading dialog
+	    	if (dialog.isShowing()) {
+	            dialog.dismiss();
+	        }
+	    	
+	    	try {	    		
 	    		ArrayList<JSONObject> values = new ArrayList<JSONObject>();
 	    		
 	    		for (int i = 0; i < 5; i++) {
 	    			values.add(json.getJSONArray("QuestionList").getJSONObject(i));
-	    			
 	    		}
 	    		//question1 = json;
 	    		
