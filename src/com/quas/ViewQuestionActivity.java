@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -55,9 +56,9 @@ public class ViewQuestionActivity extends Activity {
 		// Set the text view as activity layout
 		setContentView(textView); */
 		
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle("View Question"); 
+		ActionBar actionbar = getActionBar();
+		actionbar.setDisplayHomeAsUpEnabled(true);
+		actionbar.setTitle("View Question"); 
 		
 		//textview_raw_json = (TextView) findViewById(R.id.test_json_output);
         textview_question_title = (TextView) findViewById(R.id.test_title_question);
@@ -70,14 +71,6 @@ public class ViewQuestionActivity extends Activity {
         // Task to get JSON from end point in background
         AsyncHTTPGETToJSONTask task = new AsyncHTTPGETToJSONTask();
         task.execute(new String[] { url });
-        
-        
-        
-        
-        
-        
-        
-        
 	}
 
 	@Override
@@ -104,7 +97,6 @@ public class ViewQuestionActivity extends Activity {
 		
 		}
 	}
-	
 
 	private void openNew() {
 		Toast.makeText(this, "To New Question View", Toast.LENGTH_SHORT).show();
@@ -115,11 +107,13 @@ public class ViewQuestionActivity extends Activity {
 	}
 	
 	private void openSettings() {
-		Toast.makeText(this, "Don't Touch Me.", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Don't touch me.", Toast.LENGTH_SHORT).show();
 	}
 
 	// PRIVATE INNER JSON PARSER CLASS
     private class AsyncHTTPGETToJSONTask extends AsyncTask<String, Void, JSONObject> {
+    	private ProgressDialog dialog = new ProgressDialog(ViewQuestionActivity.this);
+    	
         @Override
         protected JSONObject doInBackground(String... urls) {
           String response = "";
@@ -151,13 +145,22 @@ public class ViewQuestionActivity extends Activity {
         	}
         	return jObj;
         }
+        
+        @Override
+        protected void onPreExecute() {
+	    	// shows the loading dialog
+	    	//this.dialog.setMessage("Fetching this question...");
+	        //this.dialog.show();
+	    }
 
         @Override
         protected void onPostExecute(JSONObject json) {
+        	// Dismisses the loading dialog
+	    	//if (dialog.isShowing()) {
+	        //    dialog.dismiss();
+	        //}
         	try {
-        		//String result = json.getString("Question");
         		
-        		//Making it a human-readable string with indentations
         		String question_title = json.getJSONObject("Question").getString("title");
         		textview_question_title.setText(question_title);
         		
@@ -172,9 +175,7 @@ public class ViewQuestionActivity extends Activity {
         				
         		String tags_list = json.getJSONObject("Question").getJSONArray("tags").toString();
         		textview_tags.setText(tags_list);
-        		
-        		//String result = json.toString(5);
-        		//textview_raw_json.setText(result);
+       
         	} catch (Exception e) {
         		e.printStackTrace();
         	}

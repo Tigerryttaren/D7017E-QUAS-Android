@@ -27,72 +27,36 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MyListActivity extends ListActivity {
-    JSONObject question1 = new JSONObject();
-    //private ProgressBar bar;
+    //JSONObject question1 = new JSONObject();
     
 
   @SuppressLint("NewApi")
   public void onCreate(Bundle icicle) {
     super.onCreate(icicle);
     
-    //Setting the progressbar
-    //setContentView(R.layout.activity_my_list);
-    //bar = (ProgressBar) this.findViewById(R.id.progressBar);
-    
-   /* String[] values = new String[] { "Question 1", "Question 2", "Question 3",
-        "Question 4", "Question 5", "Question 6", "Question 7", "Question 8",
-        "Question 9", "Question 10" }; */
-    
-    /*
-    ArrayList<String> values = new ArrayList<String>();
-    values.add("Question 1");
-    values.add("Question 2");
-    values.add("Question 3");
-    */
-    
-    ActionBar actionBar = getActionBar();
-	actionBar.setDisplayHomeAsUpEnabled(true);
-	actionBar.setTitle("Questions");
-    
-    
-    /*try {
-    	JSONObject j = new JSONObject().put("title", "Katt");
-    	question1 = j;
-    } catch (Exception e) {
-    	e.printStackTrace();
-    }*/
-    
-	String question_id = "1";
+    ActionBar action_bar = getActionBar();
+	action_bar.setDisplayHomeAsUpEnabled(true);
+	action_bar.setTitle("Questions");
+   
+	//String question_id = "1";
 	//String url = "http://130.240.5.168:5000/questions/" + question_id + "/";
-	String url = "http://130.240.5.168:5000/questions/";
+	//String url = "http://130.240.5.168:5000/questions/";
+	String url = "http://130.240.5.168:5000/questions/?paginate&page=1&page_size=10&order_by=date";
     
     // Task to get JSON from end point in background
     AsyncHTTPGETToJSONTask task = new AsyncHTTPGETToJSONTask(this);
     task.execute(new String[] { url });
    
-    
-    
-    
-    /*
-    ArrayList<JSONObject> values = new ArrayList<JSONObject>();
-    values.add(question1);
-    //values.add(question2);
-    //values.add(question3);
-    
-    QUASAdapter adapter = new QUASAdapter(this, values);
-    setListAdapter(adapter);
-    */
- 
-    
-    /*ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-        R.layout.question_list_item, R.id.firstLine, values);
-    setListAdapter(adapter);*/
   }
 
   @Override
   protected void onListItemClick(ListView l, View v, int position, long id) {
     //String item = (String) getListAdapter().getItem(position);
     Toast.makeText(this, position + " selected", Toast.LENGTH_LONG).show();
+    
+    //set ID to intent to i can get it later yao
+    
+    
   }
   
 //PRIVATE INNER JSON PARSER CLASS
@@ -109,9 +73,9 @@ public class MyListActivity extends ListActivity {
 	      String response = "";
 	      for (String url : urls) {
 	        DefaultHttpClient client = new DefaultHttpClient();
-	        HttpGet httpGet = new HttpGet(url);
+	        HttpGet http_get = new HttpGet(url);
 	        try {
-	          HttpResponse execute = client.execute(httpGet);
+	          HttpResponse execute = client.execute(http_get);
 	          InputStream content = execute.getEntity().getContent();
 
 	          BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
@@ -138,6 +102,7 @@ public class MyListActivity extends ListActivity {
 	    
 	    @Override
 	    protected void onPreExecute() {
+	    	// shows the loading dialog
 	    	this.dialog.setMessage("Fetching questions...");
 	        this.dialog.show();
 	    }
@@ -151,57 +116,22 @@ public class MyListActivity extends ListActivity {
 	    	
 	    	try {	    		
 	    		ArrayList<JSONObject> values = new ArrayList<JSONObject>();
-	    		
-	    		for (int i = 0; i < 5; i++) {
+	    		//TODO: Dynamic size of for loop please!
+	    		for (int i = 0; i < 10; i++) {
 	    			values.add(json.getJSONArray("QuestionList").getJSONObject(i));
 	    		}
-	    		//question1 = json;
-	    		
-	    	    
-	    	    //values.add(question1);
-	    	    //values.add(question2);
-	    	    //values.add(question3);
 	    	    
 	    	    QUASAdapter adapter = new QUASAdapter(context, values);
 	    	    setListAdapter(adapter); 
 	    	    
-	    	    
-	    	    
-	    	    
-	    	    
-	    	    
-	    	    
-	    		//String result = json.getString("Question");
-	    		
-	    		//Making it a human-readable string with indentations
-	    		/*String question_title = json.getJSONObject("Question").getString("title");
-	    		textview_question_title.setText(question_title);
-	    		
-	    		String question_body = json.getJSONObject("Question").getString("body");
-	    		textview_question_body.setText(question_body);
-	    		
-	    		String author_name = json.getJSONObject("Question").getJSONObject("author").getString("username");
-	    		textview_author.setText(author_name);
-	    		
-	    		String timestamp_time = json.getJSONObject("Question").getString("timestamp");
-	    		textview_timestamp.setText(timestamp_time);
-	    				
-	    		String tags_list = json.getJSONObject("Question").getJSONArray("tags").toString();
-	    		textview_tags.setText(tags_list);*/
-	    		
-	    		//String result = json.toString(5);
-	    		//textview_raw_json.setText(result);
 	    	} catch (Exception e) {
 	    		e.printStackTrace();
 	    	}
 	    }
 	  }
 } 
-
-
-
-
-/*QUAS Special Custom Made Super Adapter*/
+/*
+QUAS Special Custom Made Super Adapter
 class QUASAdapter extends ArrayAdapter<JSONObject> {
 	private final Context context;
 	public ArrayList<JSONObject> values;
@@ -214,8 +144,7 @@ class QUASAdapter extends ArrayAdapter<JSONObject> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context
-			.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View item = inflater.inflate(R.layout.question_list_item, parent, false);
 		
 		try {
@@ -249,79 +178,4 @@ class QUASAdapter extends ArrayAdapter<JSONObject> {
 		}
 		return item;
 	}
-}
-
-
-
-/*
- * ONLY FOR TESTING STRING
-QUAS Special Custom Made Super Adapter
-class QUASAdapter extends ArrayAdapter<String> {
-	private final Context context;
-	public ArrayList<String> values;
- 
-	public QUASAdapter(Context context, ArrayList<String> values) {	
-		super(context, R.layout.question_list_item, values);		
-		this.values = values;
-		this.context = context;
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context
-			.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View item = inflater.inflate(R.layout.question_list_item, parent, false);
-		
-		// Setting The Title
-		TextView titleview = (TextView) item.findViewById(R.id.firstLine);
-		titleview.setText(values.get(position));
-		
-		// Setting The Tags
-		TextView tagsview = (TextView) item.findViewById(R.id.secondLine);
-		tagsview.setText(values.get(position));
-		
-		//Return the list item
-		return item;
-	}
 }*/
-
-
-
-
-
-
-
-
-
-
-/*
-public class MyListActivity extends ListActivity {
-
-  public void onCreate(Bundle icicle) {
-    super.onCreate(icicle);
-    // create an array of Strings, that will be put to our ListActivity
-    ArrayAdapter<Model> adapter = new InteractiveArrayAdapter(this,
-        getModel());
-    setListAdapter(adapter);
-  }
-
-  private List<Model> getModel() {
-    List<Model> list = new ArrayList<Model>();
-    list.add(get("Linux"));
-    list.add(get("Windows7"));
-    list.add(get("Suse"));
-    list.add(get("Eclipse"));
-    list.add(get("Ubuntu"));
-    list.add(get("Solaris"));
-    list.add(get("Android"));
-    list.add(get("iPhone"));
-    // Initially select one of the items
-    list.get(1).setSelected(true);
-    return list;
-  }
-
-  private Model get(String s) {
-    return new Model(s);
-  }
-
-} */

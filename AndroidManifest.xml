@@ -31,12 +31,12 @@
             android:parentActivityName="com.quas.MainActivity" >
         </activity>
         <activity
-            android:name="com.quas.ListQuestionsActivity"
+            android:name="com.quas.playground.ListQuestionsActivity"
             android:parentActivityName="com.quas.MainActivity"
             android:label="@string/title_activity_list_questions" >
         </activity>
         <activity
-            android:name="com.quas.ListExperimentActivity"
+            android:name="com.quas.playground.ListExperimentActivity"
             android:label="@string/title_activity_list_experiment" >
         </activity>
         <activity
