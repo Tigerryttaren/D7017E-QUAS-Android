@@ -15,5 +15,6 @@
     <string name="title_activity_list_questions">ListQuestionsActivity</string>
     <string name="title_activity_list_experiment">ListExperimentActivity</string>
     <string name="title_activity_my_list">MyListActivity</string>
+    <string name="title_activity_new_question">NewQuestionActivity</string>
 
 </resources>

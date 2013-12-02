@@ -33,13 +33,16 @@ import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
 	
+	// "global"
+	private ArrayList<JSONObject> global_json = new ArrayList<JSONObject>();
+	
 	// Messages
 	
-	// Message with qid to send to ViewQuestion view
+	// question_id to send to ViewQuestion view
 	public final static String EXTRA_QID = "com.quas.message_uninitialized_qid";
 		
-	// global
-	private ArrayList<JSONObject> global_json = new ArrayList<JSONObject>();
+
+	
 	
 	//Server URL to first question
 	//String question_id = "1";
@@ -56,9 +59,7 @@ public class MainActivity extends ListActivity {
     	//action_bar.setDisplayHomeAsUpEnabled(true);
     	action_bar.setTitle("QUAS");
        
-    	//String question_id = "1";
-    	//String url = "http://130.240.5.168:5000/questions/" + question_id + "/";
-    	//String url = "http://130.240.5.168:5000/questions/";
+    	// url to server, right now returns 10 latest questions
     	String url = "http://130.240.5.168:5000/questions/?paginate&page=1&page_size=10&order_by=date";
         
         // Task to get JSON from end point in background
@@ -68,21 +69,15 @@ public class MainActivity extends ListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-	    //String item = (String) getListAdapter().getItem(position);
-	    //Toast.makeText(this, position + " selected", Toast.LENGTH_SHORT).show();
-	    
+	   
 	    try {
 			String qid = global_json.get(position).getString("id");
-			//int qid = (int) qid_string;
 			Intent intent = new Intent(this, ViewQuestionActivity.class);
 			intent.putExtra(EXTRA_QID, qid);
-			//Toast.makeText(this, "Pre " + qid, Toast.LENGTH_LONG).show();
 	    	startActivity(intent);
-			//openViewQuestion(this, qid);
 		} catch (JSONException je) {
 			je.printStackTrace();
 		}
-	    
 	 }
 	
 	@Override
@@ -106,12 +101,14 @@ public class MainActivity extends ListActivity {
 			return true;
 		default: 
 			return super.onOptionsItemSelected(item);
-		
 		}
 	}
 	
 	private void openNew() {
 		Toast.makeText(this, "To: New Question", Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent(this, NewQuestionActivity.class);
+    	startActivity(intent);		
+		
 	}
 	
 	private void openFilter() {
@@ -179,8 +176,7 @@ public class MainActivity extends ListActivity {
 		    	
 		    	try {	    		
 		    		ArrayList<JSONObject> values = new ArrayList<JSONObject>();
-		    		//TODO: Dynamic size of for loop please!
-		    		for (int i = 0; i < 10; i++) {
+		    		for (int i = 0; i < json.getJSONArray("QuestionList").length(); i++) {
 		    			values.add(json.getJSONArray("QuestionList").getJSONObject(i));
 		    		}
 		    	    
@@ -223,17 +219,14 @@ class QUASAdapter extends ArrayAdapter<JSONObject> {
 		// setting time
 		TextView timeview = (TextView) item.findViewById(R.id.timeline);
 		timeview.setText(values.get(position).getString("timestamp"));
-		//.getJSONArray("QuestionList").getJSONObject(position)
 		
 		// setting author
 		TextView authorview = (TextView) item.findViewById(R.id.authorline);
 		authorview.setText(values.get(position).getJSONObject("author").getString("username"));
-		//.getJSONArray("QuestionList").getJSONObject(position)
 		
 		// setting vote
 		TextView votesview = (TextView) item.findViewById(R.id.votesline);
 		votesview.setText(values.get(position).getString("score"));
-		//.getJSONArray("QuestionList").getJSONObject(position)
 				
 		// setting tags
 		TextView tagsview = (TextView) item.findViewById(R.id.tagsline);

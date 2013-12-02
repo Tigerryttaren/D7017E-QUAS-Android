@@ -32,8 +32,8 @@
         </activity>
         <activity
             android:name="com.quas.playground.ListQuestionsActivity"
-            android:parentActivityName="com.quas.MainActivity"
-            android:label="@string/title_activity_list_questions" >
+            android:label="@string/title_activity_list_questions"
+            android:parentActivityName="com.quas.MainActivity" >
         </activity>
         <activity
             android:name="com.quas.playground.ListExperimentActivity"
@@ -41,8 +41,13 @@
         </activity>
         <activity
             android:name="com.quas.MyListActivity"
-            android:parentActivityName="com.quas.MainActivity"
-            android:label="@string/title_activity_my_list" >
+            android:label="@string/title_activity_my_list"
+            android:parentActivityName="com.quas.MainActivity" >
+        </activity>
+        <activity
+            android:name="com.quas.NewQuestionActivity"
+            android:label="@string/title_activity_new_question"
+            android:parentActivityName="com.quas.MainActivity" >
         </activity>
     </application>
 
