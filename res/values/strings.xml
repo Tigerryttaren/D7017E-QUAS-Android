@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">QUAS</string>
+    <string name="action_settings">Settings</string>
+    <string name="test_title_name">Quas</string>
+    <string name="test_view_question_title">View Question</string>
+    <string name="test_title_question_title">Title</string>
+    <string name="test_body_question_title">Body</string>
+    <string name="test_author_title">Written By</string>
+    <string name="test_timestamp_title">Posted At</string>
+    <string name="test_tags_title">Tags</string>
+    <string name="title_activity_view_question">ViewQuestionActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_list_questions">ListQuestionsActivity</string>
+    <string name="title_activity_list_experiment">ListExperimentActivity</string>
+    <string name="title_activity_my_list">MyListActivity</string>
+
+</resources>
