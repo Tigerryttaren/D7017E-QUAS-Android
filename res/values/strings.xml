@@ -16,5 +16,7 @@
     <string name="title_activity_list_experiment">ListExperimentActivity</string>
     <string name="title_activity_my_list">MyListActivity</string>
     <string name="title_activity_new_question">NewQuestionActivity</string>
+    <string name="title_activity_filter_questions">FilterQuestionsActivity</string>
+    <string name="title_activity_filter_menu">FilterMenuActivity</string>
 
 </resources>

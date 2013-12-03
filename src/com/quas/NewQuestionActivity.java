@@ -1,25 +1,26 @@
 package com.quas;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class NewQuestionActivity extends Activity {
+	private String url_new_question = "http://130.240.5.168:5000/questions/";
+	private String new_question = "";
 
 	@SuppressLint("NewApi")
     @Override
@@ -29,14 +30,7 @@ public class NewQuestionActivity extends Activity {
         
         ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(true);
-		actionbar.setTitle("Ask Question"); 
-		
-		//Intent intent = new Intent(this, MyListActivity.class);
-    	//Intent intent = new Intent(this, ViewQuestionActivity.class);
-    	//EditText editText = (EditText) findViewById(R.id.test_enter_question_id);
-    	//String message = editText.getText().toString();
-    	//intent.putExtra(EXTRA_QID, message);
-    	//startActivity(intent);
+		actionbar.setTitle(" Ask Question"); 
 		
 		//TODO: implement functionality meow
 		/*
@@ -44,12 +38,78 @@ public class NewQuestionActivity extends Activity {
 		 * POST question to server
 		 * redirect to home view?
 		 * */
-		
     }
 	
 	public void submitQuestion (View button) {
-		Toast.makeText(this, "Question (Fake)Posted", Toast.LENGTH_SHORT).show();
 		
+		EditText edit_title = (EditText) findViewById(R.id.new_question_input_title);
+		String content_title = edit_title.getText().toString();
+		
+		EditText edit_body = (EditText) findViewById(R.id.new_question_input_body);
+		String content_body = edit_body.getText().toString();
+		
+		EditText edit_tags = (EditText) findViewById(R.id.new_question_input_tags);
+		String content_tags_pre = edit_tags.getText().toString();
+		
+		// json-prepping the tags
+		//String content_tags = "";
+		String temp = content_tags_pre.replaceAll(" ", "");
+		String[] parts = temp.split(",");
+		JSONArray array_tags = new JSONArray();
+		
+		for (int i = 0; i < parts.length; i++) {
+			array_tags.put(parts[i]);
+			
+			/*if (i == (parts.length)-1) {
+				content_tags = content_tags + "\"" + parts[i]; 
+			} else {
+				content_tags = content_tags + "\"" + parts[i] + "\", "; 
+			}*/
+		}
+		//content_tags = content_tags + "\"";	
+	
+		//String post = "{ \"Question\": { \"author\": { \"id\": 9001, \"posts\": 213, \"username\": \"AnnoyingFangirlboy\", \"votesum\": 0 }, \"body\": \"" + content_body + "\", \"tags\": [ " + content_tags + " ], \"title\": \"" + content_title + "\"}}";
+		//String email = "admin@admin";
+		//String token =  "123456";
+		//String post = " { \"token\" : \"" + token + "\", \"email\" : \"" + email + "\", \"title\" : \"" + content_title + "\", \"body\" : \"" + content_body + "\",  \"tags\": [ " + content_tags + " ] } ";
+		
+		// Haxxxing to bypass le Lôgin du Sýstémé
+		String email = "admin@admin";
+		String token = "123456";
+		
+		JSONObject json = new JSONObject();
+		String post = "post failure";
+		
+		try {
+			json.put("token", token);
+			json.put("email", email);
+			json.put("title", content_title);
+			json.put("body", content_body);
+			json.put("tags", array_tags);
+			
+			post = json.toString();
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		// visual inspection is visual
+		//Toast.makeText(this, post, Toast.LENGTH_LONG).show();
+		
+		Log.d("Kitteh", "This should be visile");
+		
+		new_question = post;
+		
+		if (post == "" || post == null) {
+	        Toast.makeText(this, "Please.", Toast.LENGTH_SHORT).show();   
+	    }
+	    else {
+	    	AsyncHTTPPOSTToJSONTask task = new AsyncHTTPPOSTToJSONTask();
+			task.execute(new String[] { url_new_question });
+			
+	    }
 	}
 
     @Override
@@ -60,30 +120,36 @@ public class NewQuestionActivity extends Activity {
     }
     
  // PRIVATE INNER JSON PARSER CLASS
-    private class AsyncHTTPGETToJSONTask extends AsyncTask<String, Void, JSONObject> {
-    	private ProgressDialog dialog = new ProgressDialog(NewQuestionActivity.this);
+    private class AsyncHTTPPOSTToJSONTask extends AsyncTask<String, Void, JSONObject> {
+    	//private ProgressDialog dialog = new ProgressDialog(NewQuestionActivity.this);
     	
         @Override
         protected JSONObject doInBackground(String... urls) {
-          String response = "";
-          for (String url : urls) {
-            DefaultHttpClient client = new DefaultHttpClient();
-            HttpGet http_get = new HttpGet(url);
-            try {
-              HttpResponse execute = client.execute(http_get);
-              InputStream content = execute.getEntity().getContent();
-
-              BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-              String string = "";
-              while ((string = buffer.readLine()) != null) {
-                response = response + string;
-              }
-            } catch (Exception e) {
-              e.printStackTrace();
-            }
-          }
-          JSONObject jObj = jsonify(response);
-          return jObj;
+        	String response = "";
+        	try {
+	        	for (String url : urls) {
+	        		DefaultHttpClient client = new DefaultHttpClient();
+	        		HttpPost http_post= new HttpPost(url);
+	                //http_post.addHeader("token", token);
+	                //http_post.addHeader("Content-type", "application/json");
+	                http_post.setEntity(new StringEntity(new_question));
+	                response = response + new_question;
+	                HttpResponse execute = client.execute(http_post);
+	                //HttpEntity content = execute.getEntity();
+	                
+	                
+	                // DEBUG
+	                int code = execute.getStatusLine().getStatusCode();
+	                String test = "" +  code;
+	                Log.d("Kitteh", "Status Code: " + test);
+	                
+	                client.getConnectionManager().shutdown();
+	        	}
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        	JSONObject jObj = jsonify(response);         
+        	return jObj;
         }
         protected JSONObject jsonify (String input) {
         	JSONObject jObj = null;
@@ -98,8 +164,8 @@ public class NewQuestionActivity extends Activity {
         @Override
         protected void onPreExecute() {
 	    	// shows the loading dialog
-	    	//this.dialog.setMessage("Fetching this question...");
-	        //this.dialog.show();
+	    	// this.dialog.setMessage("Asking question...");
+	        // this.dialog.show();
 	    }
 
         @Override
@@ -109,28 +175,12 @@ public class NewQuestionActivity extends Activity {
 	        //    dialog.dismiss();
 	        //}
         	try {
-        		/*
-        		String question_title = json.getJSONObject("Question").getString("title");
-        		textview_question_title.setText(question_title);
-        		
-        		String question_body = json.getJSONObject("Question").getString("body");
-        		textview_question_body.setText(question_body);
-        		
-        		String author_name = json.getJSONObject("Question").getJSONObject("author").getString("username");
-        		textview_author.setText(author_name);
-        		
-        		String timestamp_time = json.getJSONObject("Question").getString("timestamp");
-        		textview_timestamp.setText(timestamp_time);
-        				
-        		String tags_list = json.getJSONObject("Question").getJSONArray("tags").toString();
-        		textview_tags.setText(tags_list);
-        		*/
+        		// just to check that string is in json style jao
+        		Toast.makeText(NewQuestionActivity.this, json.toString(), Toast.LENGTH_LONG).show();
        
         	} catch (Exception e) {
         		e.printStackTrace();
         	}
         }
       }
-
-    
 }

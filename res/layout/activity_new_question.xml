@@ -19,7 +19,7 @@
         android:hint="enter a short question title"
         android:inputType="text" />
     
-      <EditText
+	<EditText
         android:id="@+id/new_question_input_tags"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

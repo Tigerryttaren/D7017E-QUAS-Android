@@ -19,19 +19,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends ListActivity {
+public class FilterQuestionsActivity extends ListActivity {
 	
 	// "global"
 	private ArrayList<JSONObject> global_json = new ArrayList<JSONObject>();
@@ -52,16 +47,24 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Remaining from origial main activity days
-        //setContentView(R.layout.activity_main);
         
         ActionBar action_bar = getActionBar();
-        action_bar.setDisplayShowTitleEnabled(false);
-    	//action_bar.setDisplayHomeAsUpEnabled(true);
-    	//action_bar.setTitle("QUAS");
-       
-    	// url to server, right now returns 10 latest questions
-    	String url = "http://130.240.5.168:5000/questions/?paginate&page=1&page_size=10&order_by=date";
+        //action_bar.setDisplayShowTitleEnabled(false);
+    	action_bar.setDisplayHomeAsUpEnabled(true);
+    	action_bar.setTitle(" Filter");
+    	
+    	// String building area
+    	Intent intent = getIntent();
+    	String number_of_questions = intent.getStringExtra("number_of_questions");
+    	String order_by = intent.getStringExtra("order_by");
+    			
+    	// check if order or no order
+    	String url = "";
+    	if (order_by == "no") {
+    		url = "http://130.240.5.168:5000/questions/?paginate&page=1&page_size=" + number_of_questions;
+    	} else {
+    		url = "http://130.240.5.168:5000/questions/?paginate&page=1&page_size=" + number_of_questions + "&order_by=" + order_by;
+    	}
         
         // Task to get JSON from end point in background
         AsyncHTTPGETToJSONTask task = new AsyncHTTPGETToJSONTask(this);
@@ -77,14 +80,14 @@ public class MainActivity extends ListActivity {
 			intent.putExtra(EXTRA_QID, qid);
 	    	startActivity(intent);
 		} catch (JSONException je) {
-			je.printStackTrace();
+			je.printStackTrace(); 
 		}
 	 }
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_activity_actions, menu);
+		inflater.inflate(R.menu.filter_questions, menu);
 		return super.onCreateOptionsMenu(menu);		
 	}
 	
@@ -93,9 +96,6 @@ public class MainActivity extends ListActivity {
 		switch (item.getItemId()) {
 		case R.id.action_new:
 			openNew();
-			return true;
-		case R.id.action_filter:
-			openFilter();
 			return true;
 		case R.id.action_settings:
 			openSettings();
@@ -106,16 +106,9 @@ public class MainActivity extends ListActivity {
 	}
 	
 	private void openNew() {
-		//Toast.makeText(this, "To: New Question", Toast.LENGTH_SHORT).show();
 		Intent intent = new Intent(this, NewQuestionActivity.class);
     	startActivity(intent);		
 		
-	}
-	
-	private void openFilter() {
-		//Toast.makeText(this, "To: Filter Questions", Toast.LENGTH_SHORT).show();
-		Intent intent = new Intent(this, FilterMenuActivity.class);
-    	startActivity(intent);
 	}
 	
 	private void openSettings() {
@@ -125,7 +118,7 @@ public class MainActivity extends ListActivity {
 	//PRIVATE INNER JSON PARSER CLASS
 		private class AsyncHTTPGETToJSONTask extends AsyncTask<String, Integer, JSONObject> {
 			protected Context context;
-			private ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+			private ProgressDialog dialog = new ProgressDialog(FilterQuestionsActivity.this);
 			
 			protected AsyncHTTPGETToJSONTask (Context c) {
 				this.context = c;
@@ -194,51 +187,4 @@ public class MainActivity extends ListActivity {
 		    	}
 		    }
 		  }
-}
-
-
-/*QUAS Special Custom Made Super Adapter*/
-class QUASAdapter extends ArrayAdapter<JSONObject> {
-	private final Context context;
-	public ArrayList<JSONObject> values;
- 
-	public QUASAdapter(Context context, ArrayList<JSONObject> values) {	
-		super(context, R.layout.question_list_item, values);		
-		this.values = values;
-		this.context = context;
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View item = inflater.inflate(R.layout.question_list_item, parent, false);
-		
-		try {
-		// setting title
-		TextView titleview = (TextView) item.findViewById(R.id.titleline);
-		titleview.setText(values.get(position).getString("title"));
-		//.getJSONArray("QuestionList").getJSONObject(position)
-		
-		// setting time
-		TextView timeview = (TextView) item.findViewById(R.id.timeline);
-		timeview.setText(values.get(position).getString("timestamp"));
-		
-		// setting author
-		TextView authorview = (TextView) item.findViewById(R.id.authorline);
-		authorview.setText(values.get(position).getJSONObject("author").getString("username"));
-		
-		// setting vote
-		TextView votesview = (TextView) item.findViewById(R.id.votesline);
-		votesview.setText(values.get(position).getString("score"));
-				
-		// setting tags
-		TextView tagsview = (TextView) item.findViewById(R.id.tagsline);
-		//TODO: Trim away head brackers and bunnyears
-		tagsview.setText(values.get(position).getString("tags"));
-		
-		} catch (JSONException je) {
-			je.printStackTrace();
-		}
-		return item;
-	}
 }

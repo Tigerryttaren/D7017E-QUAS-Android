@@ -49,7 +49,7 @@ public class ViewQuestionActivity extends Activity {
 		
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(true);
-		actionbar.setTitle("View Question"); 
+		actionbar.setTitle(" View Question"); 
 		
 		//textview_raw_json = (TextView) findViewById(R.id.test_json_output);
         textview_question_title = (TextView) findViewById(R.id.test_title_question);
