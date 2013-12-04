@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,27 +40,18 @@ public class MainActivity extends ListActivity {
 	
 	// question_id to send to ViewQuestion view
 	public final static String EXTRA_QID = "com.quas.message_uninitialized_qid";
-		
-
-	
-	
-	//Server URL to first question
-	//String question_id = "1";
-	//String url = "http://130.240.5.168:5000/questions/" + question_id + "/";
 	
 	@SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Remaining from origial main activity days
+        //Remaining from original main activity days
         //setContentView(R.layout.activity_main);
         
         ActionBar action_bar = getActionBar();
         action_bar.setDisplayShowTitleEnabled(false);
-    	//action_bar.setDisplayHomeAsUpEnabled(true);
-    	//action_bar.setTitle("QUAS");
        
-    	// url to server, right now returns 10 latest questions
+    	// url to server, returns 10 latest questions
     	String url = "http://130.240.5.168:5000/questions/?paginate&page=1&page_size=10&order_by=date";
         
         // Task to get JSON from end point in background
@@ -106,14 +97,11 @@ public class MainActivity extends ListActivity {
 	}
 	
 	private void openNew() {
-		//Toast.makeText(this, "To: New Question", Toast.LENGTH_SHORT).show();
 		Intent intent = new Intent(this, NewQuestionActivity.class);
     	startActivity(intent);		
-		
 	}
 	
 	private void openFilter() {
-		//Toast.makeText(this, "To: Filter Questions", Toast.LENGTH_SHORT).show();
 		Intent intent = new Intent(this, FilterMenuActivity.class);
     	startActivity(intent);
 	}
@@ -133,22 +121,24 @@ public class MainActivity extends ListActivity {
 			
 		    @Override
 		    protected JSONObject doInBackground(String... urls) {
-		      String response = "";
-		      for (String url : urls) {
-		        DefaultHttpClient client = new DefaultHttpClient();
-		        HttpGet http_get = new HttpGet(url);
-		        try {
-		          HttpResponse execute = client.execute(http_get);
-		          InputStream content = execute.getEntity().getContent();
-
-		          BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-		          String string = "";
-		          while ((string = buffer.readLine()) != null) {
-		            response = response + string;
-		          }
-		        } catch (Exception e) {
-		          e.printStackTrace();
-		        }
+		    	String response = "";
+		    	for (String url : urls) {
+		    		DefaultHttpClient client = new DefaultHttpClient();
+		        	HttpGet http_get = new HttpGet(url);
+		        
+			        try {
+				          HttpResponse execute = client.execute(http_get);
+				          InputStream content = execute.getEntity().getContent();
+		
+				          BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+				          String string = "";
+				          
+				          while ((string = buffer.readLine()) != null) {
+				        	  response = response + string;
+				          }
+			        } catch (Exception e) {
+			        	e.printStackTrace();
+			        }
 		      }
 		      JSONObject jObj = jsonify(response);
 		      return jObj;
@@ -178,6 +168,7 @@ public class MainActivity extends ListActivity {
 		        }
 		    	
 		    	try {	    		
+		    		
 		    		ArrayList<JSONObject> values = new ArrayList<JSONObject>();
 		    		for (int i = 0; i < json.getJSONArray("QuestionList").length(); i++) {
 		    			values.add(json.getJSONArray("QuestionList").getJSONObject(i));
@@ -233,7 +224,7 @@ class QUASAdapter extends ArrayAdapter<JSONObject> {
 				
 		// setting tags
 		TextView tagsview = (TextView) item.findViewById(R.id.tagsline);
-		//TODO: Trim away head brackers and bunnyears
+		//TODO: Trim away head brackets and bunnyears
 		tagsview.setText(values.get(position).getString("tags"));
 		
 		} catch (JSONException je) {

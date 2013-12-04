@@ -15,64 +15,75 @@
     android:orientation="vertical" >
     
     <TextView 
-        android:id="@+id/test_title_question_title"
+        android:id="@+id/view_question_title_question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/test_title_question_title" 
         android:textSize="20sp" />
     
     <TextView 
-        android:id="@+id/test_title_question"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    
-	<TextView 
-        android:id="@+id/test_author_title"
+        android:id="@+id/view_question_body_question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/test_author_title" 
-        android:textSize="20sp" />
+        android:textSize="15sp"
+        android:layout_marginBottom="15dip" />
     
-    <TextView 
-        android:id="@+id/test_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+	    <LinearLayout 
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+	    
+			<TextView 
+		        android:id="@+id/view_question_author_title"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/test_author_title" 
+		        android:layout_marginRight="1dip"
+		        android:textSize="12sp" />
+		    
+		    <TextView 
+		        android:id="@+id/view_question_author"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="12sp" />
+    	</LinearLayout>
+    	<LinearLayout 
+			android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+	    
+		   <TextView 
+		        android:id="@+id/view_question_timestamp_title"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/test_timestamp_title" 
+		        android:layout_marginRight="1dip"
+		        android:textSize="12sp" />
+		    
+		    <TextView 
+		        android:id="@+id/view_question_timestamp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="12sp" />
+	    </LinearLayout>    
+    <LinearLayout 
+		android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
     
-   <TextView 
-        android:id="@+id/test_body_question_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/test_body_question_title" 
-        android:textSize="20sp" />
-    
-    <TextView 
-        android:id="@+id/test_body_question"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    
-   <TextView 
-        android:id="@+id/test_timestamp_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/test_timestamp_title" 
-        android:textSize="20sp" />
-    
-    <TextView 
-        android:id="@+id/test_timestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    
-       <TextView 
-        android:id="@+id/test_tags_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/test_tags_title" 
-        android:textSize="20sp" />
-    
-    <TextView 
-        android:id="@+id/test_tags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+		<TextView 
+	        android:id="@+id/view_question_tags_title"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/test_tags_title"
+	        android:layout_marginRight="1dip" 
+	        android:textSize="12sp" />
+	    
+	    <TextView 
+	        android:id="@+id/view_question_tags"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="12sp" />
+    </LinearLayout>
     
 </LinearLayout>
 </ScrollView>

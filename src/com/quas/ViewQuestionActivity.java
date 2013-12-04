@@ -52,13 +52,12 @@ public class ViewQuestionActivity extends Activity {
 		actionbar.setTitle(" View Question"); 
 		
 		//textview_raw_json = (TextView) findViewById(R.id.test_json_output);
-        textview_question_title = (TextView) findViewById(R.id.test_title_question);
-        textview_question_body = (TextView) findViewById(R.id.test_body_question);
-        textview_author = (TextView) findViewById(R.id.test_author);
-        textview_timestamp = (TextView) findViewById(R.id.test_timestamp);
-        textview_tags = (TextView) findViewById(R.id.test_tags);
+        textview_question_title = (TextView) findViewById(R.id.view_question_title_question);
+        textview_question_body = (TextView) findViewById(R.id.view_question_body_question);
+        textview_author = (TextView) findViewById(R.id.view_question_author);
+        textview_timestamp = (TextView) findViewById(R.id.view_question_timestamp);
+        textview_tags = (TextView) findViewById(R.id.view_question_tags);
         
-        		
         // Task to get JSON from end point in background
         AsyncHTTPGETToJSONTask task = new AsyncHTTPGETToJSONTask();
         task.execute(new String[] { url });

@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,13 +36,6 @@ public class FilterQuestionsActivity extends ListActivity {
 	
 	// question_id to send to ViewQuestion view
 	public final static String EXTRA_QID = "com.quas.message_uninitialized_qid";
-		
-
-	
-	
-	//Server URL to first question
-	//String question_id = "1";
-	//String url = "http://130.240.5.168:5000/questions/" + question_id + "/";
 	
 	@SuppressLint("NewApi")
     @Override
@@ -55,17 +49,40 @@ public class FilterQuestionsActivity extends ListActivity {
     	
     	// String building area
     	Intent intent = getIntent();
-    	String number_of_questions = intent.getStringExtra("number_of_questions");
-    	String order_by = intent.getStringExtra("order_by");
-    			
-    	// check if order or no order
-    	String url = "";
-    	if (order_by == "no") {
-    		url = "http://130.240.5.168:5000/questions/?paginate&page=1&page_size=" + number_of_questions;
+    	String number_of_questions_pre = intent.getStringExtra("number_of_questions");
+    	String order_by_pre = intent.getStringExtra("order_by");
+    	String filter_by_pre = intent.getStringExtra("filter_by");
+    	String filter_data = intent.getStringExtra("author_or_tag");
+    	
+    	// prepping the number
+    	String number_of_questions = "";
+    	if (number_of_questions_pre.isEmpty()) {
+    		//default number of questions
+    		number_of_questions = "&page_size=10";
     	} else {
-    		url = "http://130.240.5.168:5000/questions/?paginate&page=1&page_size=" + number_of_questions + "&order_by=" + order_by;
+    		number_of_questions = "&page_size=" + number_of_questions_pre;
     	}
-        
+    		
+    	// prepping the filter
+    	String filter_by = "";
+    	if (filter_by_pre.isEmpty()) {
+    		filter_by = "";
+    	} else {
+      		filter_by = "&filter_by=" + filter_by_pre + "&filter_data=" + filter_data;
+    	}
+    	
+    	// prepping the order
+    	String order_by = "";
+    	if (order_by_pre.isEmpty()) {
+    		order_by = "";
+    	} else {
+    		order_by = "&order_by=" + order_by_pre;
+    	}
+    	
+    	// building the final string
+    	String url = "http://130.240.5.168:5000/questions/?paginate&page=1" + number_of_questions + order_by + filter_by;
+    	Log.d("Kitteh", url);
+    	
         // Task to get JSON from end point in background
         AsyncHTTPGETToJSONTask task = new AsyncHTTPGETToJSONTask(this);
         task.execute(new String[] { url });
@@ -108,7 +125,6 @@ public class FilterQuestionsActivity extends ListActivity {
 	private void openNew() {
 		Intent intent = new Intent(this, NewQuestionActivity.class);
     	startActivity(intent);		
-		
 	}
 	
 	private void openSettings() {

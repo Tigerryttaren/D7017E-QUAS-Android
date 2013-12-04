@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +21,8 @@ import android.widget.Toast;
 
 public class NewQuestionActivity extends Activity {
 	private String url_new_question = "http://130.240.5.168:5000/questions/";
-	private String new_question = "";
+	//private String new_question = "";
+	private JSONObject json_post;
 
 	@SuppressLint("NewApi")
     @Override
@@ -33,11 +35,7 @@ public class NewQuestionActivity extends Activity {
 		actionbar.setTitle(" Ask Question"); 
 		
 		//TODO: implement functionality meow
-		/*
-		 * Build question in json
-		 * POST question to server
-		 * redirect to home view?
-		 * */
+		// Fix login
     }
 	
 	public void submitQuestion (View button) {
@@ -59,27 +57,13 @@ public class NewQuestionActivity extends Activity {
 		
 		for (int i = 0; i < parts.length; i++) {
 			array_tags.put(parts[i]);
-			
-			/*if (i == (parts.length)-1) {
-				content_tags = content_tags + "\"" + parts[i]; 
-			} else {
-				content_tags = content_tags + "\"" + parts[i] + "\", "; 
-			}*/
 		}
-		//content_tags = content_tags + "\"";	
-	
-		//String post = "{ \"Question\": { \"author\": { \"id\": 9001, \"posts\": 213, \"username\": \"AnnoyingFangirlboy\", \"votesum\": 0 }, \"body\": \"" + content_body + "\", \"tags\": [ " + content_tags + " ], \"title\": \"" + content_title + "\"}}";
-		//String email = "admin@admin";
-		//String token =  "123456";
-		//String post = " { \"token\" : \"" + token + "\", \"email\" : \"" + email + "\", \"title\" : \"" + content_title + "\", \"body\" : \"" + content_body + "\",  \"tags\": [ " + content_tags + " ] } ";
 		
 		// Haxxxing to bypass le Lôgin du Sýstémé
-		String email = "admin@admin";
-		String token = "123456";
+		String email = "admin@admin";//"antwen-9@student.ltu.se";
+		String token = "123456";//"05953d1e22e3e5474ff250cb4f336ee7f85555655cb4a0a52d";
 		
-		JSONObject json = new JSONObject();
-		String post = "post failure";
-		
+		JSONObject json = new JSONObject();		
 		try {
 			json.put("token", token);
 			json.put("email", email);
@@ -87,29 +71,18 @@ public class NewQuestionActivity extends Activity {
 			json.put("body", content_body);
 			json.put("tags", array_tags);
 			
-			post = json.toString();
+			json_post = json;
+			
+			if (json_post.getString("body") == "" || json_post.getString("body") == null || json_post.getString("title") == "" || json_post.getString("title") == null) {
+		        Toast.makeText(this, "Please, have some content.", Toast.LENGTH_SHORT).show();   
+		    } else {
+		    	AsyncHTTPPOSTToJSONTask task = new AsyncHTTPPOSTToJSONTask();
+				task.execute(new String[] { url_new_question });
+		    }
 		
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		
-		
-		// visual inspection is visual
-		//Toast.makeText(this, post, Toast.LENGTH_LONG).show();
-		
-		Log.d("Kitteh", "This should be visile");
-		
-		new_question = post;
-		
-		if (post == "" || post == null) {
-	        Toast.makeText(this, "Please.", Toast.LENGTH_SHORT).show();   
-	    }
-	    else {
-	    	AsyncHTTPPOSTToJSONTask task = new AsyncHTTPPOSTToJSONTask();
-			task.execute(new String[] { url_new_question });
-			
-	    }
+		}		
 	}
 
     @Override
@@ -121,66 +94,47 @@ public class NewQuestionActivity extends Activity {
     
  // PRIVATE INNER JSON PARSER CLASS
     private class AsyncHTTPPOSTToJSONTask extends AsyncTask<String, Void, JSONObject> {
-    	//private ProgressDialog dialog = new ProgressDialog(NewQuestionActivity.this);
+    	private ProgressDialog dialog = new ProgressDialog(NewQuestionActivity.this);
     	
         @Override
         protected JSONObject doInBackground(String... urls) {
-        	String response = "";
         	try {
 	        	for (String url : urls) {
 	        		DefaultHttpClient client = new DefaultHttpClient();
 	        		HttpPost http_post= new HttpPost(url);
-	                //http_post.addHeader("token", token);
-	                //http_post.addHeader("Content-type", "application/json");
-	                http_post.setEntity(new StringEntity(new_question));
-	                response = response + new_question;
+	        		http_post.addHeader("Content-type", "application/json");
+	        		http_post.setEntity(new StringEntity(json_post.toString()));
 	                HttpResponse execute = client.execute(http_post);
-	                //HttpEntity content = execute.getEntity();
-	                
 	                
 	                // DEBUG
 	                int code = execute.getStatusLine().getStatusCode();
 	                String test = "" +  code;
 	                Log.d("Kitteh", "Status Code: " + test);
+	                Log.d("Kitteh", json_post.toString());
 	                
 	                client.getConnectionManager().shutdown();
 	        	}
         	} catch (Exception e) {
         		e.printStackTrace();
         	}
-        	JSONObject jObj = jsonify(response);         
-        	return jObj;
-        }
-        protected JSONObject jsonify (String input) {
-        	JSONObject jObj = null;
-        	try {
-        		jObj = new JSONObject(input); 
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
+        	JSONObject jObj = json_post;         
         	return jObj;
         }
         
         @Override
         protected void onPreExecute() {
 	    	// shows the loading dialog
-	    	// this.dialog.setMessage("Asking question...");
-	        // this.dialog.show();
+        	this.dialog.setMessage("Posting question...");
+	        this.dialog.show();
 	    }
 
         @Override
         protected void onPostExecute(JSONObject json) {
         	// Dismisses the loading dialog
-	    	//if (dialog.isShowing()) {
-	        //    dialog.dismiss();
-	        //}
-        	try {
-        		// just to check that string is in json style jao
-        		Toast.makeText(NewQuestionActivity.this, json.toString(), Toast.LENGTH_LONG).show();
-       
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
+	    	if (dialog.isShowing()) {
+	            dialog.dismiss();
+	        }
+	    	finish();
         }
       }
 }

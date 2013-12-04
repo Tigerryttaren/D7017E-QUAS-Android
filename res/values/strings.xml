@@ -7,9 +7,9 @@
     <string name="test_view_question_title">View Question</string>
     <string name="test_title_question_title">Title</string>
     <string name="test_body_question_title">Body</string>
-    <string name="test_author_title">Written By</string>
-    <string name="test_timestamp_title">Posted At</string>
-    <string name="test_tags_title">Tags</string>
+    <string name="test_author_title">Written by </string>
+    <string name="test_timestamp_title">At </string>
+    <string name="test_tags_title">Tags </string>
     <string name="title_activity_view_question">ViewQuestionActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_list_questions">ListQuestionsActivity</string>

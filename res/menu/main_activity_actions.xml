@@ -4,11 +4,11 @@
     
     <item android:id="@+id/action_new"
           android:title="New"
-          android:showAsAction="ifRoom" />
+          android:showAsAction="always" />
     
     <item android:id="@+id/action_filter"
           android:title="Filter"
-          android:showAsAction="ifRoom" />
+          android:showAsAction="always" />
     
     <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/action_settings"
