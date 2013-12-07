@@ -107,7 +107,7 @@ public class MainActivity extends ListActivity {
 	}
 	
 	private void openSettings() {
-		Toast.makeText(this, "Don't touch me.", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "\"These are not the settings you're looking for.\"\n ~ Obi-Wan Quasnobi", Toast.LENGTH_SHORT).show();
 	}
 	
 	//PRIVATE INNER JSON PARSER CLASS

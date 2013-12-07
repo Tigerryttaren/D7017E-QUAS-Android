@@ -102,26 +102,26 @@ public class ViewQuestionActivity extends Activity {
 
 	// PRIVATE INNER JSON PARSER CLASS
     private class AsyncHTTPGETToJSONTask extends AsyncTask<String, Void, JSONObject> {
-    	private ProgressDialog dialog = new ProgressDialog(ViewQuestionActivity.this);
+    	//private ProgressDialog dialog = new ProgressDialog(ViewQuestionActivity.this);
     	
         @Override
         protected JSONObject doInBackground(String... urls) {
-          String response = "";
-          for (String url : urls) {
-            DefaultHttpClient client = new DefaultHttpClient();
-            HttpGet http_get = new HttpGet(url);
-            try {
-              HttpResponse execute = client.execute(http_get);
-              InputStream content = execute.getEntity().getContent();
-
-              BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-              String string = "";
-              while ((string = buffer.readLine()) != null) {
-                response = response + string;
-              }
-            } catch (Exception e) {
-              e.printStackTrace();
-            }
+        	String response = "";
+        	for (String url : urls) {
+        		DefaultHttpClient client = new DefaultHttpClient();
+        		HttpGet http_get = new HttpGet(url);
+        		try {
+	            	HttpResponse execute = client.execute(http_get);
+	            	InputStream content = execute.getEntity().getContent();
+	
+	            	BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+	            	String string = "";
+	            	while ((string = buffer.readLine()) != null) {
+	            		response = response + string;
+	            	}
+        		} catch (Exception e) {
+        			e.printStackTrace();
+            	}
           }
           JSONObject jObj = jsonify(response);
           return jObj;
