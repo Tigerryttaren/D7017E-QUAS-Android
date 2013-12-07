@@ -3,43 +3,44 @@ package com.quas;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.Activity;
+import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ViewQuestionActivity extends Activity {
+public class ListRepliesActivity extends ListActivity {
 	
-	//private ArrayList<JSONObject> global_json_replies = new ArrayList<JSONObject>();
+	private ArrayList<JSONObject> global_json_replies = new ArrayList<JSONObject>();
 	
-	private String global_qid;
-	
-	// question_id to send to ViewQuestion view
-	public final static String EXTRA_QID = "com.quas.message_uninitialized_qid";
 	
 	//TextView To Fill With Question Data
-		private TextView textview_question_title;
+		/*private TextView textview_question_title;
 		private TextView textview_question_body;
 		private TextView textview_author;
 		private TextView textview_timestamp;
-		private TextView textview_tags;
-		private TextView textview_number_of_replies;
+		private TextView textview_tags;*/
 		
 		//Server URL to first question
 		//String question_id = "1";
@@ -49,45 +50,39 @@ public class ViewQuestionActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_view_question);
+		//setContentView(R.layout.activity_view_question);
 		
 		// Getting the Question ID from the intent
 		Intent intent = getIntent();
 		String qid = intent.getStringExtra(MainActivity.EXTRA_QID);
 		String question_id = qid;
-		global_qid = qid;
 		String url = "http://130.240.5.168:5000/questions/" + question_id + "/";
 		
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(true);
-		actionbar.setTitle(" View Question"); 
+		actionbar.setTitle(" Replies"); 
 		
 		//textview_raw_json = (TextView) findViewById(R.id.test_json_output);
-        textview_question_title = (TextView) findViewById(R.id.view_question_title_question);
+        /*textview_question_title = (TextView) findViewById(R.id.view_question_title_question);
         textview_question_body = (TextView) findViewById(R.id.view_question_body_question);
         textview_author = (TextView) findViewById(R.id.view_question_author);
         textview_timestamp = (TextView) findViewById(R.id.view_question_timestamp);
-        textview_tags = (TextView) findViewById(R.id.view_question_tags);
-        textview_number_of_replies = (TextView) findViewById(R.id.view_question_number_of_replies);
-        
-		final Button replies_button = (Button) findViewById(R.id.view_question_to_replies_button);
-        replies_button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	Intent intent = new Intent(ViewQuestionActivity.this, ListRepliesActivity.class);
-    			intent.putExtra(EXTRA_QID, global_qid);
-    	    	startActivity(intent);
-            }
-        });
+        textview_tags = (TextView) findViewById(R.id.view_question_tags);*/
         
         // Task to get JSON from end point in background
-        AsyncHTTPGETToJSONTask task = new AsyncHTTPGETToJSONTask();
+        AsyncHTTPGETToJSONTask task = new AsyncHTTPGETToJSONTask(this);
         task.execute(new String[] { url });
 	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+	    //TODO: set not_clickable somehow
+	 }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.view_reply_actions, menu);
+		inflater.inflate(R.menu.view_question_actions, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -105,6 +100,7 @@ public class ViewQuestionActivity extends Activity {
 			return true;
 		default: 
 			return super.onOptionsItemSelected(item);
+		
 		}
 	}
 
@@ -122,12 +118,12 @@ public class ViewQuestionActivity extends Activity {
 
 	// PRIVATE INNER JSON PARSER CLASS
     private class AsyncHTTPGETToJSONTask extends AsyncTask<String, Void, JSONObject> {
-    	private ProgressDialog dialog = new ProgressDialog(ViewQuestionActivity.this);
-		//protected Context context;
+    	private ProgressDialog dialog = new ProgressDialog(ListRepliesActivity.this);
+		protected Context context;
 		
-		//protected AsyncHTTPGETToJSONTask (Context c) {
-		//	this.context = c;
-		//}
+		protected AsyncHTTPGETToJSONTask (Context c) {
+			this.context = c;
+		}
     	
         @Override
         protected JSONObject doInBackground(String... urls) {
@@ -164,7 +160,7 @@ public class ViewQuestionActivity extends Activity {
         @Override
         protected void onPreExecute() {
 	    	// shows the loading dialog
-	    	this.dialog.setMessage("Fetching question...");
+	    	this.dialog.setMessage("Fetching question and replies...");
 	        this.dialog.show();
 	    }
 
@@ -176,7 +172,7 @@ public class ViewQuestionActivity extends Activity {
 	        }
         	try {
         		
-        		String question_title = json.getJSONObject("Question").getString("title");
+        		/*String question_title = json.getJSONObject("Question").getString("title");
         		textview_question_title.setText(question_title);
         		
         		String question_body = json.getJSONObject("Question").getString("body");
@@ -189,10 +185,19 @@ public class ViewQuestionActivity extends Activity {
         		textview_timestamp.setText(timestamp_time);
         				
         		String tags_list = json.getJSONObject("Question").getJSONArray("tags").toString();
-        		textview_tags.setText(tags_list);
+        		textview_tags.setText(tags_list);*/
         		
-        		int number_of_replies = json.getJSONArray("ReplyList").length();
-        		textview_number_of_replies.setText("" + number_of_replies);
+        		
+        		ArrayList<JSONObject> values = new ArrayList<JSONObject>();
+	    		for (int i = 0; i < json.getJSONArray("ReplyList").length(); i++) {
+	    			values.add(json.getJSONArray("ReplyList").getJSONObject(i));
+	    		}
+	    	    
+	    		// To get question id to send to intent
+	    		global_json_replies = values;
+	    		
+	    	    QUASRepliesAdapter adapter = new QUASRepliesAdapter(context, values);
+	    	    setListAdapter(adapter); 
        
         	} catch (Exception e) {
         		e.printStackTrace();
@@ -201,3 +206,44 @@ public class ViewQuestionActivity extends Activity {
       }
 }
 
+
+/*QUAS Special Custom Made Special-For-You Super Replies Adapter*/
+class QUASRepliesAdapter extends ArrayAdapter<JSONObject> {
+	private final Context context;
+	public ArrayList<JSONObject> values;
+ 
+	public QUASRepliesAdapter(Context context, ArrayList<JSONObject> values) {	
+		super(context, R.layout.question_list_reply_item, values);		
+		this.values = values;
+		this.context = context;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View item = inflater.inflate(R.layout.question_list_reply_item, parent, false);
+		
+		try {
+		// setting body
+		TextView bodyview = (TextView) item.findViewById(R.id.reply_bodyline);
+		bodyview.setText(values.get(position).getString("body"));
+		
+		
+		// setting time
+		TextView timeview = (TextView) item.findViewById(R.id.reply_timeline);
+		timeview.setText(values.get(position).getString("timestamp"));
+		
+		// setting author
+		TextView authorview = (TextView) item.findViewById(R.id.reply_authorline);
+		authorview.setText(values.get(position).getJSONObject("author").getString("username"));
+		
+		// setting vote
+		TextView votesview = (TextView) item.findViewById(R.id.reply_votesline);
+		votesview.setText(values.get(position).getString("score"));
+		
+		} catch (JSONException je) {
+			je.printStackTrace();
+		}
+		return item;
+	}
+}

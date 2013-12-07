@@ -18,5 +18,6 @@
     <string name="title_activity_new_question">NewQuestionActivity</string>
     <string name="title_activity_filter_questions">FilterQuestionsActivity</string>
     <string name="title_activity_filter_menu">FilterMenuActivity</string>
+    <string name="title_activity_list_replies">ListRepliesActivity</string>
 
 </resources>

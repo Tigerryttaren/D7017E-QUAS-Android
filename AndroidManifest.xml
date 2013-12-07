@@ -60,6 +60,11 @@
             android:label="@string/title_activity_filter_menu"
             android:parentActivityName="com.quas.MainActivity" >
         </activity>
+        <activity
+            android:name="com.quas.ListRepliesActivity"
+            android:label="@string/title_activity_list_replies"
+            android:parentActivityName="com.quas.FilterMenuActivity" >
+        </activity>
     </application>
 
 </manifest>

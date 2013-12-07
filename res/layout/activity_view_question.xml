@@ -87,5 +87,40 @@
 	        android:textSize="12sp" />
     </LinearLayout>
     
+	<LinearLayout 
+	    
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:background="#ffffff"
+	    android:padding="10dp"
+	    android:layout_margin="10dp" >
+	    
+		<TextView 
+			android:id="@+id/view_question_number_of_replies"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="[ # of replies]"
+		    android:layout_marginRight="1dip" 
+		    android:textSize="20sp" />
+		
+		<TextView 
+		    android:id="@+id/view_question_number_of_replies_text"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text=" replies"
+		    android:layout_marginRight="1dip" 
+		    android:textSize="20sp"/>
+		
+		<Button 
+			android:id="@+id/view_question_to_replies_button"
+			android:layout_height="wrap_content"
+    		android:layout_width="wrap_content"
+     		android:text="Read replies"
+     		 android:textSize="20sp" />
+	    
+    </LinearLayout>
 </LinearLayout>
+
+
 </ScrollView>
