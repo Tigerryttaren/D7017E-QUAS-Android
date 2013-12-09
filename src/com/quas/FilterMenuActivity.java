@@ -21,23 +21,10 @@ public class FilterMenuActivity extends Activity {
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(true);
 		actionbar.setTitle(" Filter"); 
-		
-		/*EditText edit_number = (EditText) findViewById(R.id.filter_questions_filter_number);
-		String content_number = edit_number.getText().toString();
-		
-		EditText edit_body = (EditText) findViewById(R.id.filter_questions_filter_number);
-		String content_body = edit_body.getText().toString();
-		
-		EditText edit_tags = (EditText) findViewById(R.id.filter_questions_input_tags);
-		String content_tags_pre = edit_tags.getText().toString();
-		*/
 	}
 	
 	public void filterQuestion (View button) {
-		// bygg intent extra
-		// put extra
-		// in filterQuestion, get intent, get question
-		
+			
 		EditText number_of_questions_view = (EditText) findViewById(R.id.filter_questions_filter_number);
 		String number_of_questions = number_of_questions_view.getText().toString();
 		
@@ -79,7 +66,6 @@ public class FilterMenuActivity extends Activity {
 		}
 		
     	startActivity(intent);
-	
 	}
 
 	@Override
@@ -88,5 +74,4 @@ public class FilterMenuActivity extends Activity {
 		getMenuInflater().inflate(R.menu.filter_menu, menu);
 		return true;
 	}
-
 }

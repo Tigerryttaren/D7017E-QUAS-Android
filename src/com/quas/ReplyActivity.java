@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,46 +20,41 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class NewQuestionActivity extends Activity {
-	private String url_new_question = "http://130.240.5.168:5000/questions/";
+public class ReplyActivity extends Activity {
 	private JSONObject json_post;
 
 	@SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_question);
+        setContentView(R.layout.activity_reply);
         
         ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(true);
-		actionbar.setTitle(" Ask Question"); 
+		actionbar.setTitle(" Reply"); 
 		
-		//TODO: implement functionality meow
+		//TODO: implement functionality
 		// Fix login
     }
 	
+	@Override
+	public void onBackPressed(){
+		finish();
+	}
+	
 	public void submitQuestion (View button) {
 		
-		EditText edit_title = (EditText) findViewById(R.id.new_question_input_title);
-		String content_title = edit_title.getText().toString();
-		
-		EditText edit_body = (EditText) findViewById(R.id.new_question_input_body);
+		EditText edit_body = (EditText) findViewById(R.id.reply_input_body);
 		String content_body = edit_body.getText().toString();
 		
-		EditText edit_tags = (EditText) findViewById(R.id.new_question_input_tags);
-		String content_tags_pre = edit_tags.getText().toString();
+		//TODO: Change this to post to correct question endpoint
+		Intent intent = getIntent();
+		String qid = intent.getStringExtra("REPLY_QID");
 		
-		// json-prepping the tags
-		String temp = content_tags_pre.replaceAll(" ", "");
-		String[] parts = temp.split(",");
-		JSONArray array_tags = new JSONArray();
+		String url_new_reply = "http://130.240.5.168:5000/questions/" + qid + "/replies/";
 		
-		for (int i = 0; i < parts.length; i++) {
-			array_tags.put(parts[i]);
-		}
-		
-		//TODO: This is unique. Unique is not maybe very nice. 
-		// Haxxxing to bypass le Lôgin du Sýstémé
+		//TODO: Login related 
+		// TOOD: Fix this uniqueness. Haxxxing to bypass le Lôgin du Sýstémé
 		String email = "admin@admin";//"antwen-9@student.ltu.se";
 		String token = "123456";//"05953d1e22e3e5474ff250cb4f336ee7f85555655cb4a0a52d";
 		
@@ -66,9 +62,7 @@ public class NewQuestionActivity extends Activity {
 		try {
 			json.put("token", token);
 			json.put("email", email);
-			json.put("title", content_title);
 			json.put("body", content_body);
-			json.put("tags", array_tags);
 			
 			json_post = json;
 			
@@ -76,7 +70,7 @@ public class NewQuestionActivity extends Activity {
 		        Toast.makeText(this, "Please, have some content.", Toast.LENGTH_SHORT).show();   
 		    } else {
 		    	AsyncHTTPPOSTToJSONTask task = new AsyncHTTPPOSTToJSONTask();
-				task.execute(new String[] { url_new_question });
+				task.execute(new String[] { url_new_reply });
 		    }
 		
 		} catch (Exception e) {
@@ -87,13 +81,13 @@ public class NewQuestionActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.new_question, menu);
+        getMenuInflater().inflate(R.menu.reply, menu);
         return true;
     }
     
  // PRIVATE INNER JSON PARSER CLASS
     private class AsyncHTTPPOSTToJSONTask extends AsyncTask<String, Void, JSONObject> {
-    	private ProgressDialog dialog = new ProgressDialog(NewQuestionActivity.this);
+    	private ProgressDialog dialog = new ProgressDialog(ReplyActivity.this);
     	
         @Override
         protected JSONObject doInBackground(String... urls) {
@@ -105,8 +99,8 @@ public class NewQuestionActivity extends Activity {
 	        		http_post.setEntity(new StringEntity(json_post.toString()));
 	                HttpResponse execute = client.execute(http_post);
 	                
-	                //TODO: remove debug code
 	                // DEBUG
+	                //TODO: Remove debug code
 	                int code = execute.getStatusLine().getStatusCode();
 	                String test = "" +  code;
 	                Log.d("QUAS", "Status Code: " + test);
@@ -124,7 +118,7 @@ public class NewQuestionActivity extends Activity {
         @Override
         protected void onPreExecute() {
 	    	// shows the loading dialog
-        	this.dialog.setMessage("Posting question...");
+        	this.dialog.setMessage("Posting reply...");
 	        this.dialog.show();
 	    }
 

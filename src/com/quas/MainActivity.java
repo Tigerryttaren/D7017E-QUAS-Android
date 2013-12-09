@@ -45,8 +45,6 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Remaining from original main activity days
-        //setContentView(R.layout.activity_main);
         
         ActionBar action_bar = getActionBar();
         action_bar.setDisplayShowTitleEnabled(false);
@@ -107,6 +105,7 @@ public class MainActivity extends ListActivity {
 	}
 	
 	private void openSettings() {
+		//TODO: Change to real setting menu or remove
 		Toast.makeText(this, "\"These are not the settings you're looking for.\"\n ~ Obi-Wan Quasnobi", Toast.LENGTH_SHORT).show();
 	}
 	

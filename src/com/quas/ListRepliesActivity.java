@@ -34,18 +34,6 @@ public class ListRepliesActivity extends ListActivity {
 	
 	private ArrayList<JSONObject> global_json_replies = new ArrayList<JSONObject>();
 	
-	
-	//TextView To Fill With Question Data
-		/*private TextView textview_question_title;
-		private TextView textview_question_body;
-		private TextView textview_author;
-		private TextView textview_timestamp;
-		private TextView textview_tags;*/
-		
-		//Server URL to first question
-		//String question_id = "1";
-		//String url = "http://130.240.5.168:5000/questions/" + question_id + "/";
-
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +49,6 @@ public class ListRepliesActivity extends ListActivity {
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(true);
 		actionbar.setTitle(" Replies"); 
-		
-		//textview_raw_json = (TextView) findViewById(R.id.test_json_output);
-        /*textview_question_title = (TextView) findViewById(R.id.view_question_title_question);
-        textview_question_body = (TextView) findViewById(R.id.view_question_body_question);
-        textview_author = (TextView) findViewById(R.id.view_question_author);
-        textview_timestamp = (TextView) findViewById(R.id.view_question_timestamp);
-        textview_tags = (TextView) findViewById(R.id.view_question_tags);*/
         
         // Task to get JSON from end point in background
         AsyncHTTPGETToJSONTask task = new AsyncHTTPGETToJSONTask(this);
@@ -76,13 +57,17 @@ public class ListRepliesActivity extends ListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-	    //TODO: set not_clickable somehow
+	    //TODO: set not_clickable somehow? for prettiness' sake...
 	 }
+	@Override
+	public void onBackPressed(){
+		finish();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.view_question_actions, menu);
+		inflater.inflate(R.menu.view_reply_actions, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -100,11 +85,11 @@ public class ListRepliesActivity extends ListActivity {
 			return true;
 		default: 
 			return super.onOptionsItemSelected(item);
-		
 		}
 	}
 
 	private void openReply() {
+		//TODO: add link to Reply view
 		Toast.makeText(this, "To: Reply View", Toast.LENGTH_SHORT).show();
 	}
 	
@@ -172,22 +157,6 @@ public class ListRepliesActivity extends ListActivity {
 	        }
         	try {
         		
-        		/*String question_title = json.getJSONObject("Question").getString("title");
-        		textview_question_title.setText(question_title);
-        		
-        		String question_body = json.getJSONObject("Question").getString("body");
-        		textview_question_body.setText(question_body);
-        		
-        		String author_name = json.getJSONObject("Question").getJSONObject("author").getString("username");
-        		textview_author.setText(author_name);
-        		
-        		String timestamp_time = json.getJSONObject("Question").getString("timestamp");
-        		textview_timestamp.setText(timestamp_time);
-        				
-        		String tags_list = json.getJSONObject("Question").getJSONArray("tags").toString();
-        		textview_tags.setText(tags_list);*/
-        		
-        		
         		ArrayList<JSONObject> values = new ArrayList<JSONObject>();
 	    		for (int i = 0; i < json.getJSONArray("ReplyList").length(); i++) {
 	    			values.add(json.getJSONArray("ReplyList").getJSONObject(i));
@@ -205,7 +174,6 @@ public class ListRepliesActivity extends ListActivity {
         }
       }
 }
-
 
 /*QUAS Special Custom Made Special-For-You Super Replies Adapter*/
 class QUASRepliesAdapter extends ArrayAdapter<JSONObject> {
@@ -227,7 +195,6 @@ class QUASRepliesAdapter extends ArrayAdapter<JSONObject> {
 		// setting body
 		TextView bodyview = (TextView) item.findViewById(R.id.reply_bodyline);
 		bodyview.setText(values.get(position).getString("body"));
-		
 		
 		// setting time
 		TextView timeview = (TextView) item.findViewById(R.id.reply_timeline);

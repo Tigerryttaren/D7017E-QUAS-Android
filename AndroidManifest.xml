@@ -29,6 +29,7 @@
         <activity
             android:name="com.quas.ViewQuestionActivity"
             android:label="@string/title_activity_view_question"
+            android:launchMode="singleTop"
             android:parentActivityName="com.quas.MainActivity" >
         </activity>
         <activity
@@ -41,7 +42,7 @@
             android:label="@string/title_activity_list_experiment" >
         </activity>
         <activity
-            android:name="com.quas.MyListActivity"
+            android:name="com.quas.playground.MyListActivity"
             android:label="@string/title_activity_my_list"
             android:parentActivityName="com.quas.MainActivity" >
         </activity>
@@ -63,7 +64,12 @@
         <activity
             android:name="com.quas.ListRepliesActivity"
             android:label="@string/title_activity_list_replies"
-            android:parentActivityName="com.quas.FilterMenuActivity" >
+            android:parentActivityName="com.quas.ViewQuestionActivity" >
+        </activity>
+        <activity
+            android:name="com.quas.ReplyActivity"
+            android:label="@string/title_activity_reply"
+            android:parentActivityName="com.quas.ViewQuestionActivity" >
         </activity>
     </application>
 

@@ -26,8 +26,6 @@ import android.widget.Toast;
 
 public class ViewQuestionActivity extends Activity {
 	
-	//private ArrayList<JSONObject> global_json_replies = new ArrayList<JSONObject>();
-	
 	private String global_qid;
 	
 	// question_id to send to ViewQuestion view
@@ -41,10 +39,6 @@ public class ViewQuestionActivity extends Activity {
 		private TextView textview_tags;
 		private TextView textview_number_of_replies;
 		
-		//Server URL to first question
-		//String question_id = "1";
-		//String url = "http://130.240.5.168:5000/questions/" + question_id + "/";
-
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +81,7 @@ public class ViewQuestionActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.view_reply_actions, menu);
+		inflater.inflate(R.menu.view_question_actions, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -109,7 +103,9 @@ public class ViewQuestionActivity extends Activity {
 	}
 
 	private void openReply() {
-		Toast.makeText(this, "To: Reply View", Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent(this, ReplyActivity.class);
+		intent.putExtra("REPLY_QID", global_qid);
+    	startActivity(intent);
 	}
 	
 	private void openVote() {
@@ -123,12 +119,7 @@ public class ViewQuestionActivity extends Activity {
 	// PRIVATE INNER JSON PARSER CLASS
     private class AsyncHTTPGETToJSONTask extends AsyncTask<String, Void, JSONObject> {
     	private ProgressDialog dialog = new ProgressDialog(ViewQuestionActivity.this);
-		//protected Context context;
-		
-		//protected AsyncHTTPGETToJSONTask (Context c) {
-		//	this.context = c;
-		//}
-    	
+
         @Override
         protected JSONObject doInBackground(String... urls) {
         	String response = "";
@@ -200,4 +191,3 @@ public class ViewQuestionActivity extends Activity {
         }
       }
 }
-

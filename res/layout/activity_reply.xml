@@ -13,31 +13,17 @@
     android:orientation="vertical" >
     
     <EditText
-        android:id="@+id/new_question_input_title"
+        android:id="@+id/reply_input_body"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="enter a short question title"
-        android:inputType="text" />
-    
-	<EditText
-        android:id="@+id/new_question_input_tags"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="enter tags (comma-separated)"
-        android:inputType="text" />
-    
-    <EditText
-        android:id="@+id/new_question_input_body"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="elaborate on your question"
+        android:hint="write your reply"
         android:inputType="textMultiLine"
-        android:lines="5" />
+        android:lines="8" />
     
     <Button  
-	    android:id="@+id/new_question_submit_button"  
+	    android:id="@+id/reply_submit_button"  
 	    android:layout_height="wrap_content"  
-	    android:text="Ask question!"  
+	    android:text="Reply!"  
 	    android:onClick="submitQuestion"  
 	    android:layout_width="fill_parent">  
 	</Button>
